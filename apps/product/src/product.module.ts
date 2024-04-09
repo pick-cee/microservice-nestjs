@@ -20,7 +20,7 @@ import { ProductRepository } from './product.repository';
         CLOUDINARY_API_KEY: Joi.string(),
         CLOUDINARY_API_SECRET: Joi.string()
       }),
-      envFilePath: './apps/product/.env'
+      envFilePath: './apps/product/.env',
     }),
     DatabaseModule,
     MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),

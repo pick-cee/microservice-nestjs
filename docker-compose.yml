@@ -1,77 +1,81 @@
+version: '1'
 services:
-  users: 
-    build: 
-      context: .
-      dockerfile: ./apps/users/Dockerfile
-      target: development
-    command: npm run start:dev users
-    env_file:
-      - ./apps/users/.env
-    depends_on:
-      - mongodb-primary
-      - auth
-      - product
-      - rabbitmq
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - '3000:3000'
-  
-  auth:
-    build: 
-      context: .
-      dockerfile: ./apps/auth/Dockerfile
-      target: development
-    command: npm run start:dev auth
-    env_file:
-      - ./apps/auth/.env
-    depends_on:
-      - mongodb-primary
-      - rabbitmq
-      - product
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - '3001:3001'
-  
-  product: 
-    build: 
-      context: .
-      dockerfile: ./apps/product/Dockerfile
-      target: development
-    command: npm run start:dev product
-    env_file:
-      - ./apps/product/.env
-    depends_on:
-      - mongodb-primary
-      - rabbitmq
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - '3002:3002'
-  
   rabbitmq:
-    image: rabbitmq
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    volumes:
+      - /var/lib/rabbitmq
     ports:
       - '5672:5672'
-  
+      - '15672:15672'
+    env_file:
+      - .env
+
   mongodb-primary:
-    image: mongo:7.0
+    image: mongo:5.0
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=password123
-    # volumes:
-    #   - 'mongodb_master_data:/data/db'
+    volumes:
+      - 'mongodb_master_data:/data/db'
     ports:
       - '27017:27017'
 
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    env_file:
+      - ./apps/auth/.env
+    ports:
+      - '3001:3001'
+    depends_on:
+      - rabbitmq
+      - mongodb-primary
+      - product
+    volumes:
+      - .:/usr/src/app # any chenge to the folder would be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev auth
 
-# volumes:
-#   mongodb_master_data:
-#     driver: local
-# volumes:
-#   mongodb_data:
-#     driver: local
+  product:
+    build:
+      context: .
+      dockerfile: ./apps/product/Dockerfile
+      target: development
+    env_file:
+      - ./apps/product/.env
+    depends_on:
+      - rabbitmq
+      - mongodb-primary
+    ports:
+      - '3002:3002'
+    volumes:
+      - .:/usr/src/app # any chenge to the folder would be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev product
+
+  users:
+    build:
+      context: .
+      dockerfile: ./apps/users/Dockerfile
+      target: development
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./apps/users/.env
+    depends_on:
+      - rabbitmq
+      - auth
+      - product
+      - mongodb-primary
+    volumes:
+      - .:/usr/src/app # any chenge to the folder would be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev users
+
+volumes:
+  mongodb_master_data:
+    driver: local # Define a custom network for MongoDB

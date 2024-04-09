@@ -10,8 +10,6 @@ COPY . .
 
 RUN npm run build
 
-CMD ["npm", "run", "start:dev", "users"]
-
 FROM node:alpine as production
 
 ARG NODE_ENV=production
@@ -27,4 +25,5 @@ COPY . .
 
 COPY --from=development /usr/src/app/dist ./dist
 
-CMD ["node", "dist/apps/users/main"]
+CMD ["node", "dist/app/users/main"]
+
