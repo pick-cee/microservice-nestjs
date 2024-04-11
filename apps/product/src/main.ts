@@ -11,6 +11,6 @@ async function bootstrap() {
   app.connectMicroservice(queueSvc.getOptions('product'))
   app.useGlobalPipes(new ValidationPipe())
   await app.startAllMicroservices()
-  await app.listen(configSvc.get('PORT'));
+  await app.listen(3002);
 }
 bootstrap();

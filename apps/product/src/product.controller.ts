@@ -11,9 +11,8 @@ export class ProductController {
   constructor(private readonly productService: ProductService) { }
 
   @Post('create')
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @HttpCode(HttpStatus.CREATED)
-  @UseInterceptors(FileInterceptor('file'))
   async createProduct(@Body() productDto: CreateProductDto
   ) {
     try {
@@ -24,13 +23,13 @@ export class ProductController {
     }
   }
 
-  @Put('update-product-image')
-  @UseGuards(JwtGuard)
   @HttpCode(HttpStatus.OK)
+  @Put('update-product-image')
   @UseInterceptors(FileInterceptor('file'))
+  // @UseGuards(JwtGuard)
   async updateProductImage(
     @Query('productId') productId: any,
-    @UploadedFile() file: Express.Multer.File | any
+    @UploadedFile() file: Express.Multer.File
   ) {
     return await this.productService.updateProductImage(productId, file)
   }
@@ -38,7 +37,7 @@ export class ProductController {
   @Put('update-product')
   @UseGuards(JwtGuard)
   @HttpCode(HttpStatus.OK)
-  async updateProduct(productId: any, update: UpdateProductDto) {
+  async updateProduct(@Query() productId: any, @Body() update: UpdateProductDto) {
     return this.productService.updateProduct(productId, update)
   }
 

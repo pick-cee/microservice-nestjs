@@ -19,7 +19,7 @@ export class QueueService {
         }
     }
 
-    ack(context: RmqContext) {
+    async ack(context: RmqContext) {
         const channel = context.getChannelRef()
         const originalMessage = context.getMessage()
         channel.ack(originalMessage)
