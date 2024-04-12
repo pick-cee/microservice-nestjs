@@ -2,12 +2,13 @@ import { Product } from '@app/common';
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PRODUCT_SERVICE } from '../constants/services';
+import { CART_SERVICE, PRODUCT_SERVICE } from '../constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateProductDto, UpdateProductDto } from './dtos';
 import { ProductRepository } from './product.repository';
 import { firstValueFrom } from 'rxjs';
 import { CloudinaryService } from './upload.service';
+
 
 @Injectable()
 export class ProductService {
@@ -15,6 +16,7 @@ export class ProductService {
   constructor(
     @InjectModel(Product.name) private productModel: Model<Product>,
     @Inject(PRODUCT_SERVICE) private productClient: ClientProxy,
+    @Inject(CART_SERVICE) private cartClient: ClientProxy,
     private readonly prodRepo: ProductRepository,
     private uploadSvc: CloudinaryService
   ) { }
@@ -25,9 +27,10 @@ export class ProductService {
 
       await this.productClient.connect()
       await firstValueFrom(
-        this.productClient.emit('product_created', { product: product })
-      )
-      this.logger.log('Product_Created from product service', product)
+        this.productClient.emit('product_created', product)
+      ).then(() => {
+        this.logger.log(`Message "product_created" emitted successfully!`)
+      })
       return product
     }
     catch (err) {
@@ -71,6 +74,23 @@ export class ProductService {
     }
 
     return product
+  }
+
+
+  async createCart(userId: any, productId: any) {
+    await this.cartClient.connect()
+    await firstValueFrom(
+      this.cartClient.emit('create_cart', {
+        userId: userId,
+        productId: productId
+      })
+    ).then(() => {
+      this.logger.log('Create_cart message emitted successfully', { userId, productId })
+    })
+
+    return {
+      message: 'Message has been sent to the cart queue.... pending response'
+    }
   }
 
 }

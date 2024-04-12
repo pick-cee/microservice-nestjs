@@ -18,8 +18,7 @@ export class OrderController {
 
   @EventPattern('product_created')
   async handleProductCreated(@Payload() data: any, @Ctx() context: RmqContext) {
-    console.log(context.getMessage())
-    await this.orderService.handleProductCreated(data.product)
+    await this.orderService.handleProductCreated(data)
     await this.rmqService.ack(context)
   }
 }

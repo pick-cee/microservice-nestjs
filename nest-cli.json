@@ -46,13 +46,22 @@
         "tsConfigPath": "apps/auth/tsconfig.app.json"
       }
     },
-    "order":{
+    "order": {
       "type": "application",
       "root": "apps/order",
       "entryFile": "main",
       "sourceRoot": "apps/order/src",
       "compilerOptions": {
         "tsConfigPath": "apps/order/tsconfig.app.json"
+      }
+    },
+    "cart": {
+      "type": "application",
+      "root": "apps/cart",
+      "entryFile": "main",
+      "sourceRoot": "apps/cart/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/cart/tsconfig.app.json"
       }
     }
   }

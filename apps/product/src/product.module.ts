@@ -8,7 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from 'apps/auth/src/auth.module';
 import { ProductRepository } from './product.repository';
 import { UploadModule } from './upload.module';
-import { PRODUCT_SERVICE } from '../constants/services';
+import { CART_SERVICE, PRODUCT_SERVICE } from '../constants/services';
 
 @Module({
   imports: [
@@ -19,6 +19,7 @@ import { PRODUCT_SERVICE } from '../constants/services';
         PORT: Joi.number().required(),
         RABBIT_URI: Joi.string().required(),
         RABBIT_PRODUCT_QUEUE: Joi.string().required(),
+        RABBIT_CART_QUEUE: Joi.string().required(),
         CLOUDINARY_NAME: Joi.string(),
         CLOUDINARY_API_KEY: Joi.string(),
         CLOUDINARY_API_SECRET: Joi.string()
@@ -30,8 +31,11 @@ import { PRODUCT_SERVICE } from '../constants/services';
     QueueModule.register({
       name: PRODUCT_SERVICE
     }),
+    QueueModule.register({
+      name: CART_SERVICE
+    }),
     AuthModule,
-    UploadModule
+    UploadModule,
   ],
   controllers: [ProductController],
   providers: [ProductService, ProductRepository],

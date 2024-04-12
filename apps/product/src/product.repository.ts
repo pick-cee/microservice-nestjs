@@ -9,9 +9,9 @@ export class ProductRepository extends AbstractRepository<Product> {
     protected readonly logger = new Logger(ProductRepository.name);
 
     constructor(
-        @InjectModel(Product.name) userModel: Model<Product>,
+        @InjectModel(Product.name) prodModel: Model<Product>,
         @InjectConnection() connection: Connection
     ) {
-        super(userModel, connection)
+        super(prodModel, connection)
     }
 }

@@ -3,6 +3,7 @@ import { ProductService } from './product.service';
 import { CreateProductDto, UpdateProductDto } from './dtos';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtGuard } from 'apps/auth/src/guards';
+import { GetUser } from '@app/common';
 
 
 @Controller('product')
@@ -11,7 +12,7 @@ export class ProductController {
   constructor(private readonly productService: ProductService) { }
 
   @Post('create')
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @HttpCode(HttpStatus.CREATED)
   async createProduct(@Body() productDto: CreateProductDto
   ) {
@@ -26,7 +27,7 @@ export class ProductController {
   @HttpCode(HttpStatus.OK)
   @Put('update-product-image')
   @UseInterceptors(FileInterceptor('file'))
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   async updateProductImage(
     @Query('productId') productId: any,
     @UploadedFile() file: Express.Multer.File
@@ -45,5 +46,15 @@ export class ProductController {
   @HttpCode(HttpStatus.OK)
   async getProducts() {
     return this.productService.getAllProducts()
+  }
+
+  @Post('create-cart')
+  @UseGuards(JwtGuard)
+  @HttpCode(HttpStatus.CREATED)
+  async createOrder(
+    @GetUser('userId') userId: any,
+    @Query('productId') productId: any
+  ) {
+    return this.productService.createCart(userId, productId)
   }
 }

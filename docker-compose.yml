@@ -96,6 +96,27 @@ services:
       - /usr/src/app/node_modules
     command: npm run start:dev order
 
+  cart: 
+    build: 
+      context: .
+      dockerfile: ./apps/cart/Dockerfile
+      target: development
+    ports:
+      - '3004:3004'
+    env_file:
+      - ./apps/order/.env
+    depends_on:
+      - rabbitmq
+      - mongodb-primary
+      - auth
+      - product
+      - users
+      - order
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev cart
+
 volumes:
   mongodb_master_data:
     driver: local # Define a custom network for MongoDB

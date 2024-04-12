@@ -6,10 +6,10 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(ProductModule);
-  const queueSvc = app.get<QueueService>(QueueService)
+  const queueSvc = app.get<QueueService>(QueueService);
+  app.useGlobalPipes(new ValidationPipe());
   const configSvc = app.get(ConfigService);
   app.connectMicroservice(queueSvc.getOptions('product'))
-  app.useGlobalPipes(new ValidationPipe())
   await app.startAllMicroservices()
   await app.listen(3002);
 }
