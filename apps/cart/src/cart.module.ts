@@ -7,7 +7,6 @@ import { CART_SERVICE, PRODUCT_SERVICE } from '../constants/services';
 import * as Joi from 'joi'
 import { MongooseModule } from '@nestjs/mongoose';
 import { CartRepository } from './cart.repository';
-import { ProductModule } from 'apps/product/src/product.module';
 import { AuthModule } from 'apps/auth/src/auth.module';
 
 @Module({

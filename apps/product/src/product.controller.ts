@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto, UpdateProductDto } from './dtos';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -56,5 +56,15 @@ export class ProductController {
     @Query('productId') productId: any
   ) {
     return this.productService.createCart(userId, productId)
+  }
+
+  @Delete('remove-from-cart')
+  @UseGuards(JwtGuard)
+  @HttpCode(HttpStatus.OK)
+  async removeFromCart(
+    @GetUser('userId') userId: any,
+    @Query('productId') productId: any
+  ) {
+    return this.productService.removeProductFromCart(userId, productId)
   }
 }

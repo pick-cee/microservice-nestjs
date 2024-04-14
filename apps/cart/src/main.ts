@@ -10,7 +10,7 @@ async function bootstrap() {
   // const configSvc = app.get(ConfigService);
   app.connectMicroservice(queueSvc.getOptions('product'))
   app.connectMicroservice(queueSvc.getOptions('cart'))
-  // app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalPipes(new ValidationPipe())
   await app.startAllMicroservices()
   await app.listen(3004);
 }

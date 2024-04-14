@@ -5,7 +5,6 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi'
 import { QueueModule } from '@app/common';
 import { AuthModule } from 'apps/auth/src/auth.module';
-import { ProductModule } from 'apps/product/src/product.module';
 
 @Module({
   imports: [

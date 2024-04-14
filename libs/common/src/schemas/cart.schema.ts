@@ -10,7 +10,7 @@ export class Cart extends AbstractDocument {
         type: Types.ObjectId
     }
 
-    @Prop({ required: true, ref: 'Product' })
+    @Prop({ required: true })
     product: [
         {
             productId: Types.ObjectId

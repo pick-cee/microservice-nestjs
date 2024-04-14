@@ -24,13 +24,6 @@ export class ProductService {
   async createProduct(productDto: CreateProductDto) {
     try {
       const product = await this.prodRepo.create(productDto)
-
-      await this.productClient.connect()
-      await firstValueFrom(
-        this.productClient.emit('product_created', product)
-      ).then(() => {
-        this.logger.log(`Message "product_created" emitted successfully!`)
-      })
       return product
     }
     catch (err) {
@@ -92,5 +85,22 @@ export class ProductService {
       message: 'Message has been sent to the cart queue.... pending response'
     }
   }
+
+  async removeProductFromCart(userId: any, productId: any) {
+    await this.cartClient.connect()
+    await firstValueFrom(
+      this.cartClient.emit('remove_product_from_cart', {
+        userId: userId,
+        productId: productId
+      })
+    ).then(() => {
+      this.logger.log('Delete_cart message emitted successfully')
+    })
+
+    return {
+      message: 'Message has been sent to the cart queue for processing....'
+    }
+  }
+
 
 }

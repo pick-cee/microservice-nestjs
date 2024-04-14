@@ -46,4 +46,21 @@ export class CartService {
     cart.save()
     return cart
   }
+
+  async removeProductFromCart(userId: any, productId: any) {
+    const cart = await this.cartModel.findOne({ userId: userId }).exec()
+    if (!cart) {
+      throw new NotFoundException('Cart cannot be found!')
+    }
+    const productIndex = cart.product.findIndex(
+      (product) => product.productId.toString() === productId
+    )
+    if (productIndex === -1) {
+      throw new NotFoundException('Invalid action, Product not in cart!')
+    }
+
+    cart.product.splice(productIndex, 1)
+    await cart.save()
+
+  }
 }

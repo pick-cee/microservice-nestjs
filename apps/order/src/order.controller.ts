@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
+import { Ctx, Payload, RmqContext } from '@nestjs/microservices';
 import { QueueService } from '@app/common';
 
 @Controller()
@@ -16,7 +16,8 @@ export class OrderController {
     return this.orderService.getHello();
   }
 
-  @EventPattern('product_created')
+
+  // change this handler to handle payments and accept payment!
   async handleProductCreated(@Payload() data: any, @Ctx() context: RmqContext) {
     await this.orderService.handleProductCreated(data)
     await this.rmqService.ack(context)

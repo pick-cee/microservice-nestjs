@@ -1,4 +1,4 @@
-import { Controller, Get, Logger } from '@nestjs/common';
+import { Controller, Logger } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
 import { QueueService } from '@app/common';
@@ -19,8 +19,19 @@ export class CartController {
     const userId = data.userId
     const productId = data.productId
     await this.cartService.addToCart(userId, productId)
-    await this.queueSvc.ack(context)
+    return await this.queueSvc.ack(context)
 
-    this.logger.log("Cart has been created....")
+  }
+
+  @EventPattern('remove_product_from_cart')
+  async handleRemoveProductFromCart(
+    @Payload() data: any,
+    @Ctx() context: RmqContext
+  ) {
+    const userId = data.userId
+    const productId = data.productId
+
+    await this.cartService.removeProductFromCart(userId, productId)
+    return await this.queueSvc.ack(context)
   }
 }
