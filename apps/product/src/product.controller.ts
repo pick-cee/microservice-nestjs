@@ -48,6 +48,14 @@ export class ProductController {
     return this.productService.getAllProducts()
   }
 
+  @Get('search')
+  @HttpCode(HttpStatus.OK)
+  async searchProducts(
+    @Query('search') search: any
+  ) {
+    return this.productService.searchProducts(search)
+  }
+
   @Post('create-cart')
   @UseGuards(JwtGuard)
   @HttpCode(HttpStatus.CREATED)

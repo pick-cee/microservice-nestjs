@@ -1,9 +1,10 @@
-import { Controller, Logger } from '@nestjs/common';
+import { Controller, HttpCode, HttpStatus, Logger, Post, Query, UseGuards } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
-import { QueueService } from '@app/common';
+import { GetUser, QueueService } from '@app/common';
+import { JwtGuard } from 'apps/auth/src/guards';
 
-@Controller()
+@Controller('cart')
 export class CartController {
   private logger = new Logger(CartController.name)
   constructor(private readonly cartService: CartService,
@@ -33,5 +34,15 @@ export class CartController {
 
     await this.cartService.removeProductFromCart(userId, productId)
     return await this.queueSvc.ack(context)
+  }
+
+  @UseGuards(JwtGuard)
+  @Post('make-payment')
+  @HttpCode(HttpStatus.OK)
+  async makePayment(
+    @GetUser('userId') userId: any,
+    @Query('cartId') cartId: any
+  ) {
+    return this.cartService.makePayment(userId, cartId)
   }
 }

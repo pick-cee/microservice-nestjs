@@ -1,8 +1,11 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CartRepository } from './cart.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cart, Product } from '@app/common';
 import { Model } from 'mongoose';
+import { ORDER_SERVICE } from '../constants/services';
+import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class CartService {
@@ -12,6 +15,7 @@ export class CartService {
     private readonly cartRepo: CartRepository,
     @InjectModel(Cart.name) private cartModel: Model<Cart>,
     @InjectModel(Product.name) private productModel: Model<Product>,
+    @Inject(ORDER_SERVICE) private orderClient: ClientProxy
   ) { }
 
   async addToCart(userId: any, productId: any) {
@@ -62,5 +66,21 @@ export class CartService {
     cart.product.splice(productIndex, 1)
     await cart.save()
 
+  }
+
+  async makePayment(userId: any, cartId: any) {
+    await this.orderClient.connect()
+    await firstValueFrom(
+      this.orderClient.emit('make-payment', {
+        userId: userId,
+        cartId: cartId
+      })
+    ).then(() => {
+      this.logger.log('Make-Payment has been emitted to the order queue successfully', { userId, cartId })
+    })
+
+    return {
+      message: 'Message has been sent to the appropriate queue.... wait for response..'
+    }
   }
 }

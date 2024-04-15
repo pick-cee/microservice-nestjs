@@ -15,7 +15,10 @@ async function bootstrap() {
 
   const app = await NestFactory.create(OrderModule);
   const rmqService = app.get<QueueService>(QueueService);
-  app.connectMicroservice(rmqService.getOptions('product'));
+  app.connectMicroservice(rmqService.getOptions('cart'));
+  app.connectMicroservice(rmqService.getOptions('order'));
   await app.startAllMicroservices();
+
+  await app.listen(3003)
 }
 bootstrap();

@@ -3,10 +3,10 @@ import { CartController } from './cart.controller';
 import { CartService } from './cart.service';
 import { Cart, CartSchema, DatabaseModule, Product, ProductSchema, QueueModule } from '@app/common';
 import { ConfigModule } from '@nestjs/config';
-import { CART_SERVICE, PRODUCT_SERVICE } from '../constants/services';
+import { CART_SERVICE, ORDER_SERVICE, PRODUCT_SERVICE } from '../constants/services';
 import * as Joi from 'joi'
 import { MongooseModule } from '@nestjs/mongoose';
-import { CartRepository } from './cart.repository';
+import { CartRepository } from './cart.repository'
 import { AuthModule } from 'apps/auth/src/auth.module';
 
 @Module({
@@ -18,7 +18,8 @@ import { AuthModule } from 'apps/auth/src/auth.module';
         PORT: Joi.number().required(),
         RABBIT_URI: Joi.string().required(),
         RABBIT_PRODUCT_QUEUE: Joi.string().required(),
-        RABBIT_CART_QUEUE: Joi.string().required()
+        RABBIT_CART_QUEUE: Joi.string().required(),
+        RABBIT_ORDER_QUEUE: Joi.string().required()
       }),
       envFilePath: './apps/cart/.env'
     }),
@@ -27,6 +28,9 @@ import { AuthModule } from 'apps/auth/src/auth.module';
     }),
     QueueModule.register({
       name: CART_SERVICE
+    }),
+    QueueModule.register({
+      name: ORDER_SERVICE
     }),
     DatabaseModule,
     AuthModule,

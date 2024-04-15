@@ -1,9 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { Ctx, Payload, RmqContext } from '@nestjs/microservices';
-import { QueueService } from '@app/common';
+import { GetUser, QueueService } from '@app/common';
+import { JwtGuard } from 'apps/auth/src/guards';
 
-@Controller()
+@Controller('order')
 export class OrderController {
 
   constructor(
@@ -17,9 +17,13 @@ export class OrderController {
   }
 
 
-  // change this handler to handle payments and accept payment!
-  async handleProductCreated(@Payload() data: any, @Ctx() context: RmqContext) {
-    await this.orderService.handleProductCreated(data)
-    await this.rmqService.ack(context)
+  @UseGuards(JwtGuard)
+  @HttpCode(HttpStatus.OK)
+  @Post('make-payment')
+  async handleCreatePayment(
+    @GetUser('userId') userId: any,
+    @Query('cartId') cartId: any
+  ) {
+    return this.orderService.handlePayment(userId, cartId)
   }
 }
