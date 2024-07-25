@@ -26,6 +26,7 @@ jobs:
         with:
           image: akin2003/pick-cee
           registry: docker.io
+          dockerfile: ./apps/${{ matrix.service }}/Dockerfile
           username: ${{secrets.DOCKER_USERNAME}}
           password: ${{secrets.DOCKER_TOKEN}}
           tag: ${{matrix.service}}
