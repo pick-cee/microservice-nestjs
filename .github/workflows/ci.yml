@@ -27,4 +27,3 @@ jobs:
           context: .
           file: ./apps/${{ matrix.service }}/Dockerfile
           push: true
-          tags: ${{matrix.service}}
