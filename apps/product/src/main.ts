@@ -9,8 +9,8 @@ async function bootstrap() {
   const queueSvc = app.get<QueueService>(QueueService);
   app.useGlobalPipes(new ValidationPipe());
   const configSvc = app.get(ConfigService);
-  app.connectMicroservice(queueSvc.getOptions('product'))
-  await app.startAllMicroservices()
-  await app.listen(3002);
+  app.connectMicroservice(queueSvc.getOptions('product'));
+  await app.startAllMicroservices();
+  await app.listen(configSvc.get('PORT'));
 }
 bootstrap();

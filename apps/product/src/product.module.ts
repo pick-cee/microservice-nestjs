@@ -1,9 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ProductController } from './product.controller';
 import { ProductService } from './product.service';
-import * as Joi from 'joi'
+import * as Joi from 'joi';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule, Product, ProductSchema, QueueModule } from '@app/common';
+import {
+  DatabaseModule,
+  Product,
+  ProductSchema,
+  QueueModule,
+} from '@app/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from 'apps/auth/src/auth.module';
 import { ProductRepository } from './product.repository';
@@ -22,17 +27,17 @@ import { CART_SERVICE, PRODUCT_SERVICE } from '../constants/services';
         RABBIT_CART_QUEUE: Joi.string().required(),
         CLOUDINARY_NAME: Joi.string(),
         CLOUDINARY_API_KEY: Joi.string(),
-        CLOUDINARY_API_SECRET: Joi.string()
+        CLOUDINARY_API_SECRET: Joi.string(),
       }),
       envFilePath: './apps/product/.env',
     }),
     DatabaseModule,
     MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
     QueueModule.register({
-      name: PRODUCT_SERVICE
+      name: PRODUCT_SERVICE,
     }),
     QueueModule.register({
-      name: CART_SERVICE
+      name: CART_SERVICE,
     }),
     AuthModule,
     UploadModule,
@@ -40,4 +45,4 @@ import { CART_SERVICE, PRODUCT_SERVICE } from '../constants/services';
   controllers: [ProductController],
   providers: [ProductService, ProductRepository],
 })
-export class ProductModule { }
+export class ProductModule {}

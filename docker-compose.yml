@@ -35,6 +35,9 @@ services:
       - rabbitmq
       - mongodb-primary
       - product
+      - cart
+      - order
+      - users
     volumes:
       - .:/usr/src/app # any chenge to the folder would be reflected
       - /usr/src/app/node_modules
@@ -50,6 +53,9 @@ services:
     depends_on:
       - rabbitmq
       - mongodb-primary
+      - cart
+      - order
+      - users
     ports:
       - '3002:3002'
     volumes:
@@ -68,8 +74,6 @@ services:
       - ./apps/users/.env
     depends_on:
       - rabbitmq
-      - auth
-      - product
       - mongodb-primary
     volumes:
       - .:/usr/src/app # any chenge to the folder would be reflected
@@ -88,8 +92,7 @@ services:
     depends_on:
       - rabbitmq
       - mongodb-primary
-      - auth
-      - product 
+      - cart
       - users
     volumes:
       - .:/usr/src/app
@@ -108,10 +111,7 @@ services:
     depends_on:
       - rabbitmq
       - mongodb-primary
-      - auth
-      - product
       - users
-      - order
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules

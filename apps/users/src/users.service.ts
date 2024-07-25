@@ -9,20 +9,22 @@ import { Model } from 'mongoose';
 export class UsersService {
   constructor(
     private readonly userRepo: UserRepository,
-    @InjectModel(User.name) private userModel: Model<User>
-  ) { }
+    @InjectModel(User.name) private userModel: Model<User>,
+  ) {}
 
   async updateUser(userId: any, updateUser: UpdateUserRequest) {
     try {
-      const user = await this.userRepo.findOneAndUpdate({ _id: userId }, updateUser)
-      return user
-    }
-    catch (err) {
-      throw err
+      const user = await this.userRepo.findOneAndUpdate(
+        { _id: userId },
+        updateUser,
+      );
+      return user;
+    } catch (err) {
+      throw err;
     }
   }
 
   async findOne(userId: any) {
-    return this.userModel.findOne({ _id: userId })
+    return this.userModel.findOne({ _id: userId });
   }
 }

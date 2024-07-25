@@ -7,7 +7,7 @@ import { JwtGuard } from 'apps/auth/src/guards';
 @Controller('users')
 @UseGuards(JwtGuard)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Get('user')
   getUser(@GetUser('userId') userId: any) {
@@ -15,7 +15,10 @@ export class UsersController {
   }
 
   @Put('update')
-  updateUser(@GetUser('userId') userId: any, @Body() updateUser: UpdateUserRequest) {
-    return this.usersService.updateUser(userId, updateUser)
+  updateUser(
+    @GetUser('userId') userId: any,
+    @Body() updateUser: UpdateUserRequest,
+  ) {
+    return this.usersService.updateUser(userId, updateUser);
   }
 }
