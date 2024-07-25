@@ -21,10 +21,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
+      - name: Build and Push Docker Image
+        uses: mr-smithers-excellent/docker-build-push@v4
         with:
-          context: .
-          file: ./apps/${{ matrix.service }}/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/'pick-cee':${{ matrix.service }}
+          image: akin2003/pick-cee
+          registry: docker.io
+          username: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKER_TOKEN}}
+          tag: ${{matrix.service}}
