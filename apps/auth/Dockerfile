@@ -28,10 +28,11 @@ COPY . .
 EXPOSE 3001
 
 # Start the application in watch mode for development
-CMD ["npm", "run", "start:dev:auth"]
+CMD ["npm", "run", "start:dev" "auth"]
 
 # Stage 3: Production Stage
 FROM node:lts-alpine AS production
+RUN npm install -g @nestjs/cli
 
 WORKDIR /app
 

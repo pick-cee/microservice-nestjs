@@ -26,7 +26,6 @@ spec:
           volumeMounts:
             - name: app-volume
               mountPath: /usr/src/app
-          command: ['node', 'dist/apps/users/main.js']
       volumes:
         - name: app-volume
           emptyDir: {}

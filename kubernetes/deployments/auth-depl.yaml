@@ -25,7 +25,7 @@ spec:
                 name: microservice-secret
           volumeMounts:
             - name: app-volume
-              mountPath: /usr/src/app
+              mountPath: /app
           command: ['node', 'dist/apps/auth/main.js']
       volumes:
         - name: app-volume

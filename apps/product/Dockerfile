@@ -28,7 +28,7 @@ COPY . .
 EXPOSE 3002
 
 # Start the application in watch mode for development
-CMD ["npm", "run", "start:dev:product"]
+CMD ["npm", "run", "start:dev", "product"]
 
 # Stage 3: Production Stage
 FROM node:lts-alpine AS production
