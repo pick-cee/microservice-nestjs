@@ -1,0 +1,56 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: auth
+# spec:
+#   replicas: 2
+#   selector:
+#     matchLabels:
+#       app: auth-service
+#   template:
+#     metadata:
+#       labels:
+#         app: auth-service
+#     spec:
+#       containers:
+#         - name: auth
+#           image: akin2003/pick-cee:auth
+#           ports:
+#             - containerPort: 3001
+#           envFrom:
+#             - configMapRef:
+#                 name: microservices-config
+#             - secretRef:
+#                 name: mongodb-secret
+#           volumeMounts:
+#             - name: app-volume
+#               mountPath: /usr/src/app
+#           command: ['npm', 'run', 'start:dev', 'auth']
+#       volumes:
+#         - name: app-volume
+#           persistentVolumeClaim:
+#             claimName: mongo-pvc
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+        - name: auth
+          image: akin2003/pick-cee:auth
+          command: ['node', 'dist/apps/auth/main']
+          ports:
+            - containerPort: 3001
+          envFrom:
+            - configMapRef:
+                name: microservices-config

@@ -14,6 +14,8 @@
     "start:dev:cart": "nest start --watch cart",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/apps/practice-microservice-nestjs/main",
+    "build:auth": "nest build auth",
+    "start:auth": "node dist/apps/auth/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",

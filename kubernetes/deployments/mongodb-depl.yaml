@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-primary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-service
+  template:
+    metadata:
+      labels:
+        app: mongodb-service
+    spec:
+      containers:
+        - name: mongodb-primary
+          image: mongo:5.0
+          ports:
+            - containerPort: 27017
+          envFrom:
+            - secretRef:
+                name: mongodb-secret
+          volumeMounts:
+            - name: mongodb-storage
+              mountPath: /data/db
+      volumes:
+        - name: mongodb-storage
+          persistentVolumeClaim:
+            claimName: mongo-pvc
