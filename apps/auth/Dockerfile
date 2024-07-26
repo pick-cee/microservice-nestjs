@@ -10,6 +10,8 @@ COPY . .
 
 RUN npm run build:auth
 
+RUN npm run build
+
 FROM node:alpine as production
 
 ARG NODE_ENV=production
