@@ -1,9 +1,21 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: microservices-config
+  name: auth-config
 data:
-  RABBITMQ_DEFAULT_USER: user
-  RABBITMQ_DEFAULT_PASS: password
-  MONGODB_URI: mongodb://root:password123@mongodb-primary:27017
+  RABBITMQ_DEFAULT_USER: 'user'
+  RABBITMQ_DEFAULT_PASS: 'password'
+  MONGODB_URI: 'mongodb://root:password123@mongodb-primary:27017'
+  PORT: '3001'
+  CALLBACK_URL: 'http://localhost:3001/auth/google/callback'
+  JWT_EXPIRATION: '30'
+  # Add other common environment variables here
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: users-config
+data:
+  PORT: '3000'
   # Add other common environment variables here

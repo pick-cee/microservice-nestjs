@@ -1,31 +1,47 @@
-FROM node:alpine As development
+# Stage 1: Build Stage
+FROM node:lts-alpine AS builder
 
-WORKDIR /usr/src/app
+# Install Nest CLI globally
+RUN npm install -g @nestjs/cli
 
-COPY package*.json ./
+WORKDIR /app
 
+COPY ../../package*.json ./
 RUN npm install
 
 COPY . .
 
-RUN npm run build:auth
-
+# Build the application
 RUN npm run build
 
-FROM node:alpine as production
+# Stage 2: Development Stage
+FROM node:lts-alpine AS development
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+WORKDIR /app
 
-WORKDIR /usr/src/app
-
-COPY package*.json ./
-
-RUN npm install --only=production
+COPY ../../package*.json ./
+RUN npm install
 
 COPY . .
 
-COPY --from=development /usr/src/app/dist ./dist
+# Expose the application port
+EXPOSE 3001
 
-CMD ["node", "dist/apps/auth/main"]
+# Start the application in watch mode for development
+CMD ["npm", "run", "start:dev:auth"]
 
+# Stage 3: Production Stage
+FROM node:lts-alpine AS production
+
+WORKDIR /app
+
+COPY ../../package*.json ./
+RUN npm install --only=production
+
+COPY --from=builder /app/dist ./dist
+
+# Expose the application port
+EXPOSE 3001
+
+# Start the application
+CMD ["node", "dist/apps/auth/main.js"]
