@@ -11,8 +11,8 @@ RUN npm install
 
 COPY . .
 
-# Build the application
-RUN npm run build
+# Build the application 
+RUN npm run build order
 
 # Stage 2: Development Stage
 FROM node:lts-alpine AS development

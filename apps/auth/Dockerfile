@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 # Build the application
-RUN npm run build
+RUN npm run build auth
 
 # Stage 2: Development Stage
 FROM node:lts-alpine AS development
