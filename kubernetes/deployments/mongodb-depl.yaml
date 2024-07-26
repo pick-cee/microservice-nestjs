@@ -6,24 +6,45 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mongodb-service
+      app: mongodb-primary
   template:
     metadata:
       labels:
-        app: mongodb-service
+        app: mongodb-primary
     spec:
       containers:
         - name: mongodb-primary
           image: mongo:5.0
           ports:
             - containerPort: 27017
-          envFrom:
-            - secretRef:
-                name: mongodb-secret
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: microservice-secret
+                  key: MONGO_INITDB_ROOT_USERNAME
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: microservice-secret
+                  key: MONGO_INITDB_ROOT_PASSWORD
           volumeMounts:
-            - name: mongodb-storage
+            - name: mongodb-data
               mountPath: /data/db
       volumes:
-        - name: mongodb-storage
+        - name: mongodb-data
           persistentVolumeClaim:
-            claimName: mongo-pvc
+            claimName: mongodb-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-primary
+spec:
+  selector:
+    app: mongodb-primary
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017

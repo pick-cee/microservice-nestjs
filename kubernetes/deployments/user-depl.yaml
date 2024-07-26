@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users
+  template:
+    metadata:
+      labels:
+        app: users
+    spec:
+      containers:
+        - name: users
+          image: akin2003/pick-cee:users
+          ports:
+            - containerPort: 3000
+          env:
+            - name: MONGODB-URI
+              value: 'mongodb://root:password123@mongodb-primary:27017/'
+            - name: PORT
+              value: '3000'
+          envFrom:
+            - configMapRef:
+                name: microservices-config
+            - secretRef:
+                name: microservice-secret
+          volumeMounts:
+            - name: app-volume
+              mountPath: /usr/src/app
+      volumes:
+        - name: app-volume
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users
+spec:
+  selector:
+    app: users
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000

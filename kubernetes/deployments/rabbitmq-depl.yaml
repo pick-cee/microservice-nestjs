@@ -6,11 +6,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: rabbitmq-service
+      app: rabbitmq
   template:
     metadata:
       labels:
-        app: rabbitmq-service
+        app: rabbitmq
     spec:
       containers:
         - name: rabbitmq
@@ -21,3 +21,21 @@ spec:
           envFrom:
             - configMapRef:
                 name: microservices-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+spec:
+  selector:
+    app: rabbitmq
+  ports:
+    - name: amqp
+      protocol: TCP
+      port: 5672
+      targetPort: 5672
+    - name: management
+      protocol: TCP
+      port: 15672
+      targetPort: 15672

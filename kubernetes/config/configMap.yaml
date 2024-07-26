@@ -3,5 +3,7 @@ kind: ConfigMap
 metadata:
   name: microservices-config
 data:
-  RABBITMQ_HOST: 'rabbitmq'
-  MONGODB_HOST: 'mongodb-primary'
+  RABBITMQ_DEFAULT_USER: user
+  RABBITMQ_DEFAULT_PASS: password
+  MONGODB_URI: mongodb://root:password123@mongodb-primary:27017
+  # Add other common environment variables here
