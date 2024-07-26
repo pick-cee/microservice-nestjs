@@ -6,7 +6,7 @@ RUN npm install -g @nestjs/cli
 
 WORKDIR /app
 
-COPY ../../package*.json ./
+COPY package*.json ./
 RUN npm install
 
 COPY . .
@@ -19,7 +19,7 @@ FROM node:lts-alpine AS development
 
 WORKDIR /app
 
-COPY ../../package*.json ./
+COPY package*.json ./
 RUN npm install
 
 COPY . .
@@ -36,7 +36,7 @@ RUN npm install -g @nestjs/cli
 
 WORKDIR /app
 
-COPY ../../package*.json ./
+COPY package*.json ./
 RUN npm install --only=production
 
 COPY --from=builder /app/dist ./dist
