@@ -9,6 +9,10 @@ data:
   PORT: '3001'
   CALLBACK_URL: 'http://localhost:3001/auth/google/callback'
   JWT_EXPIRATION: '30'
+  RABBIT_PRODUCT_QUEUE: 'product'
+  RABBIT_CART_QUEUE: 'cart'
+  RABBIT_ORDER_QUEUE: 'order'
+  RABBIT_URI: 'amqp://user:password@rabbitmq:5672'
   # Add other common environment variables here
 
 ---
@@ -19,3 +23,28 @@ metadata:
 data:
   PORT: '3000'
   # Add other common environment variables here
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cart-config
+data:
+  PORT: '3004'
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: order-config
+data:
+  PORT: '3003'
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: product-config
+data:
+  PORT: '3002'
+  CLOUDINARY_NAME: 'akin-cloud'
