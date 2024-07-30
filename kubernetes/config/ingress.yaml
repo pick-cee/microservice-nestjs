@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: microservices-ingress
+  annotations:
+    # nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/cors-allow-methods: 'GET, POST, PUT, DELETE'
+spec:
+  rules:
+    - host: k8s.com
+      http:
+        paths:
+          - path: /auth
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: auth
+                port:
+                  number: 3001
+          - path: /cart/make-payment
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: cart
+                port:
+                  number: 3004
+          - path: /order
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: order
+                port:
+                  number: 3003
+          - path: /product
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: product
+                port:
+                  number: 3002
+          - path: /user
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: user
+                port:
+                  number: 3000
